@@ -1,14 +1,14 @@
 import React, { useEffect, Suspense } from 'react';
-import Chart from 'chart.js/dist/Chart.min.js';
+// import Chart from 'chart.js/dist/Chart.min.js';
 import prettyBytes from 'm/pretty-bytes';
 
 import Loading from 'c/Loading';
 import { fetchData } from '../api/traffic';
 import { unstable_createResource as createResource } from 'react-cache';
 
-const delay = ms => new Promise(r => setTimeout(r, ms));
-const xRes = createResource(x => {
-  return delay(1).then(() => x);
+// const delay = ms => new Promise(r => setTimeout(r, ms));
+const chartJSResource = createResource(() => {
+  return import('chart.js/dist/Chart.min.js').then(c => c.default);
 });
 
 const colorCombo = {
@@ -120,6 +120,7 @@ const chartWrapperStyle = {
 };
 
 export default function TrafficChart() {
+  const Chart = chartJSResource.read();
   useEffect(() => {
     const ctx = document.getElementById('myChart').getContext('2d');
     const traffic = fetchData();
@@ -144,13 +145,9 @@ export default function TrafficChart() {
     return traffic.subscribe(() => c.update());
   }, []);
 
-  const x = xRes.read('111');
   return (
-    <div>
-      <h1>{x}</h1>
-      <div style={chartWrapperStyle}>
-        <canvas id="myChart" />
-      </div>
+    <div style={chartWrapperStyle}>
+      <canvas id="myChart" />
     </div>
   );
 }
