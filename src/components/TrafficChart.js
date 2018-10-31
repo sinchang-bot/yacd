@@ -1,7 +1,5 @@
-import React, { useEffect, Suspense } from 'react';
+import React, { useEffect } from 'react';
 import prettyBytes from 'm/pretty-bytes';
-
-import Loading from 'c/Loading';
 import { fetchData } from '../api/traffic';
 import { unstable_createResource as createResource } from 'react-cache';
 
