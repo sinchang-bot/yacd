@@ -1,9 +1,25 @@
-import React, { Component } from 'react';
+import React, { Component, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
 import s0 from './Input.module.scss';
 
-class Input extends Component {
+export default function Input(props) {
+  return (
+    <>
+      <input className={s0.input} {...props} />
+    </>
+  );
+}
+
+Input.propTypes = {
+  value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  type: PropTypes.string,
+  onChange: PropTypes.func,
+  name: PropTypes.string,
+  placeholder: PropTypes.string
+};
+
+class _Input extends Component {
   static propTypes = {
     value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     type: PropTypes.string,
@@ -58,4 +74,4 @@ class Input extends Component {
   }
 }
 
-export default Input;
+// export default Input;
