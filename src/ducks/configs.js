@@ -41,8 +41,6 @@ export function fetchConfigs() {
       payload
     });
 
-    console.log('CompletedFetchConfigs', payload);
-
     // side effect
     if (successfullyFetchedConfigsBefore === false) {
       successfullyFetchedConfigsBefore = true;

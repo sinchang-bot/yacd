@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
 import { useComponentState, useActions } from 'm/store';
 
 import { getConfigs, fetchConfigs, updateConfigs } from 'd/configs';
@@ -50,21 +51,33 @@ const actions = {
 
 const mapStateToProps = s => ({ configs: getConfigs(s) });
 
-export default function Config2() {
-  const { fetchConfigs, updateConfigs } = useActions(actions);
+export default function ConfigContainer() {
+  const { fetchConfigs } = useActions(actions);
   const { configs } = useComponentState(mapStateToProps);
+  useEffect(() => {
+    fetchConfigs();
+  }, []);
+  return <Config configs={configs} />;
+}
+
+function Config({ configs }) {
+  const { updateConfigs } = useActions(actions);
+  // configState to track component internal state
+  // prevConfigs to track external props.configs
   const [configState, _setConfigState] = useState(configs);
+  const [prevConfigs, setPrevConfigs] = useState(configs);
+  // equivalent of getDerivedStateFromProps
+  if (prevConfigs !== configs) {
+    setPrevConfigs(configs);
+    _setConfigState(configs);
+  }
+
   const setConfigState = (name, val) => {
     _setConfigState({
       ...configState,
       [name]: val
     });
   };
-  useEffect(async () => {
-    // TODO
-    await fetchConfigs();
-    _setConfigState(configs);
-  }, []);
 
   function handleInputOnChange(e) {
     const target = e.target;
@@ -84,8 +97,10 @@ export default function Config2() {
       case 'redir-port':
       case 'socket-port':
       case 'port':
-        value = parseInt(target.value, 10);
-        if (value < 0 || value > 65535) return;
+        if (target.value !== '') {
+          const num = parseInt(target.value, 10);
+          if (num < 0 || num > 65535) return;
+        }
         setConfigState(name, value);
         break;
       default:
@@ -95,15 +110,16 @@ export default function Config2() {
 
   function handleInputOnBlur(e) {
     const target = e.target;
-    const { name } = target;
+    const { name, value } = target;
     switch (name) {
       case 'port':
       case 'socket-port':
-      case 'redir-port':
-        value = parseInt(target.value, 10);
-        if (value < 0 || value > 65535) return;
-        updateConfigs({ [name]: value });
+      case 'redir-port': {
+        const num = parseInt(value, 10);
+        if (num < 0 || num > 65535) return;
+        updateConfigs({ [name]: num });
         break;
+      }
     }
   }
 
@@ -173,3 +189,7 @@ export default function Config2() {
     </div>
   );
 }
+
+Config.propTypes = {
+  configs: PropTypes.object
+};

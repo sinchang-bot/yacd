@@ -18,7 +18,6 @@ class Switch extends Component {
 
   render() {
     const { checked, onChange, name } = this.props;
-    console.log({ name, checked });
     return (
       <div>
         <input

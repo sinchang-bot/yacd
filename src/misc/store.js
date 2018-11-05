@@ -38,8 +38,6 @@ export function useComponentState(selector) {
     return store.subscribe(() => {
       const compStateNext = selector(store.getState());
       if (shallowEqual(compStateCurr, compStateNext)) return;
-      console.log('change', compStateCurr, compStateNext);
-      console.log(compStateCurr.configs === compStateNext.configs);
       // update state if not equal
       compStateCurr = compStateNext;
       setCompState(compStateNext);
