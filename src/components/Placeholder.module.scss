@@ -1,0 +1,27 @@
+.Placeholder {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background: #202020;
+  width: 100vw;
+  height: 100vh;
+
+  animation: yacd 2s infinite ease-in-out;
+
+  svg {
+    opacity: 0.3;
+  }
+}
+
+@keyframes yacd {
+  0% {
+    color: #555;
+  }
+  50% {
+    color: #222;
+  }
+  100% {
+    color: #555;
+  }
+}
